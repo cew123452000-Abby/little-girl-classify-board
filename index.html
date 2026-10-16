@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>《小女生》分類描述命名互動板</title>
+  <style>
+    :root{
+      --ink:#243239;--muted:#64747a;--paper:#fffdfa;--bg:#edf3ef;--line:#cfdbd4;
+      --teal:#247d78;--teal-dark:#17635f;--coral:#e96f66;--gold:#e7a33d;--purple:#7764b4;
+      --shadow:0 14px 42px rgba(42,59,57,.13);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);background:linear-gradient(145deg,#eef5f1,#f7efe4)}
+    button,input,textarea{font:inherit}
+    button{cursor:pointer}
+    .app{min-height:100vh;padding-bottom:34px}
+    header{position:sticky;top:0;z-index:20;background:rgba(255,253,250,.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(36,50,57,.1)}
+    .header-inner{max-width:1500px;margin:auto;padding:13px 22px;display:flex;align-items:center;gap:16px}
+    .title-block{min-width:290px}.kicker{font-weight:900;color:var(--coral);font-size:14px;letter-spacing:.08em}.title-block h1{font-size:clamp(22px,2.2vw,34px);margin:2px 0 0;line-height:1.2}
+    .progress-wrap{flex:1;min-width:160px}.progress-label{display:flex;justify-content:space-between;font-weight:800;font-size:14px;color:var(--muted);margin-bottom:5px}.progress{height:9px;border-radius:99px;background:#dde7e1;overflow:hidden}.progress span{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--coral),var(--gold));transition:width .25s ease}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.tool{border:1px solid #bfd0c8;background:#fff;color:var(--teal-dark);border-radius:12px;padding:9px 13px;font-weight:900;min-height:42px}.tool.primary{background:var(--teal);color:#fff;border-color:var(--teal)}.tool.warn{color:#a9403e}.tool:hover,.tool:focus-visible{outline:3px solid rgba(36,125,120,.16);border-color:var(--teal)}
+    main{max-width:1500px;margin:auto;padding:20px 22px 0}
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}.step{display:flex;align-items:center;gap:11px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.8);border:1px solid var(--line)}.step-num{display:grid;place-items:center;width:36px;height:36px;flex:none;border-radius:50%;background:var(--coral);color:#fff;font-weight:900}.step b{display:block}.step small{display:block;color:var(--muted);margin-top:2px;line-height:1.35}
+    .notice{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff7e8;border-left:6px solid var(--gold);border-radius:0 15px 15px 0;padding:11px 15px;margin-bottom:16px}.notice p{margin:0;font-weight:750;line-height:1.5}.status{color:var(--teal-dark);font-weight:900;text-align:right}
+    .workspace{display:grid;grid-template-columns:minmax(280px,.72fr) minmax(0,2.28fr);gap:16px;align-items:start}
+    .panel{background:var(--paper);border:1px solid var(--line);border-radius:21px;box-shadow:var(--shadow)}
+    .bank{position:sticky;top:86px;padding:17px;max-height:calc(100vh - 108px);overflow:auto}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:11px}.panel-head h2{font-size:21px;margin:0}.count{display:inline-grid;place-items:center;min-width:36px;height:31px;border-radius:99px;background:#e6f1ec;color:var(--teal-dark);font-weight:900}.bank-tip{font-size:14px;color:var(--muted);line-height:1.5;margin:0 0 12px}.card-list{display:grid;gap:9px;min-height:120px;padding:3px;border-radius:14px}.desc-card{position:relative;width:100%;min-height:62px;border:2px solid transparent;border-radius:14px;background:#fff;padding:12px 12px 12px 42px;text-align:left;color:var(--ink);box-shadow:0 5px 16px rgba(42,59,57,.09);font-size:clamp(16px,1.1vw,20px);font-weight:850;line-height:1.35;touch-action:none;user-select:none;transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease}.desc-card:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(42,59,57,.13)}.desc-card.selected{border-color:var(--coral);box-shadow:0 0 0 4px rgba(233,111,102,.15)}.desc-card.correct{border-color:#3b9b70}.desc-card.discuss{border-color:#d26058}.desc-card.dragging{opacity:.35}.card-id{position:absolute;left:10px;top:11px;display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:#e9f2ee;color:var(--teal-dark);font-size:12px;font-weight:900}.ref-badge{display:none;margin-top:7px;color:#fff;background:var(--purple);border-radius:99px;padding:4px 8px;font-size:12px;font-weight:900;width:max-content}.show-reference .ref-badge{display:block}.drag-ghost{position:fixed;z-index:1000;width:min(300px,70vw);pointer-events:none;opacity:.93;transform:rotate(2deg);box-shadow:0 20px 45px rgba(26,41,40,.26)}
+    .zones{display:grid;grid-template-columns:1fr 1fr;gap:14px}.zone{min-height:320px;padding:14px;border:2px dashed #b9cac1;border-radius:20px;background:rgba(255,255,255,.68);transition:border-color .16s ease,background .16s ease}.zone:hover,.zone:focus-within{border-color:var(--teal);background:#fff}.zone.drop-active{border-color:var(--coral);background:#fff4ef}.zone-top{display:grid;grid-template-columns:46px 1fr auto;gap:10px;align-items:center;margin-bottom:9px}.zone-letter{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:var(--teal);color:#fff;font-size:24px;font-weight:900}.zone-name{width:100%;min-width:0;border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px 12px;font-weight:900;font-size:clamp(17px,1.3vw,22px);color:var(--ink)}.zone-name:focus,.reason:focus{outline:3px solid rgba(36,125,120,.16);border-color:var(--teal)}.zone-count{display:grid;place-items:center;min-width:36px;height:32px;padding:0 8px;border-radius:99px;background:#e8eee9;color:var(--muted);font-weight:900}.drop-zone{min-height:120px;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start;padding:7px;border-radius:14px;background:rgba(238,244,240,.75)}.drop-hint{grid-column:1/-1;padding:26px 8px;text-align:center;color:#809088;font-weight:750;border:1px dashed #cad6d0;border-radius:12px}.reason-label{display:block;margin:10px 0 5px;font-size:14px;color:var(--teal-dark);font-weight:900}.reason{width:100%;min-height:66px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:9px 11px;background:#fff;line-height:1.45;color:var(--ink)}
+    .selected-banner{position:fixed;z-index:30;left:50%;bottom:17px;transform:translateX(-50%) translateY(130%);width:min(720px,calc(100vw - 24px));padding:12px 15px;border-radius:16px;background:#253b3b;color:#fff;box-shadow:0 14px 34px rgba(24,37,37,.3);display:flex;align-items:center;justify-content:space-between;gap:12px;transition:transform .2s ease}.selected-banner.show{transform:translateX(-50%) translateY(0)}.selected-banner b{color:#ffd69a}.selected-banner button{border:0;background:#fff;color:#253b3b;border-radius:10px;padding:7px 10px;font-weight:900}
+    .toast{position:fixed;z-index:60;left:50%;top:82px;transform:translate(-50%,-20px);opacity:0;background:#253b3b;color:#fff;border-radius:13px;padding:10px 16px;font-weight:800;box-shadow:var(--shadow);pointer-events:none;transition:.2s ease}.toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-width:1050px){.header-inner{flex-wrap:wrap}.title-block{min-width:220px}.toolbar{width:100%;justify-content:flex-start}.workspace{grid-template-columns:1fr}.bank{position:static;max-height:none}.card-list{grid-template-columns:repeat(2,1fr)}.zones{grid-template-columns:1fr 1fr}}
+    @media(max-width:680px){.header-inner,main{padding-left:12px;padding-right:12px}.steps{grid-template-columns:1fr}.notice{display:block}.status{text-align:left;margin-top:7px}.card-list,.zones{grid-template-columns:1fr}.drop-zone{grid-template-columns:1fr}.toolbar{display:grid;grid-template-columns:1fr 1fr}.tool{padding:8px}.zone{min-height:270px}}
+    @media print{body{background:#fff}.app{padding:0}header,.steps,.notice,.selected-banner,.toast{display:none!important}main{max-width:none;padding:0}.workspace{display:block}.bank{display:none}.panel{box-shadow:none;border:0}.zones{grid-template-columns:1fr 1fr;gap:12px}.zone{break-inside:avoid;background:#fff;min-height:0}.reason{min-height:55px}.desc-card{box-shadow:none;border-color:#cfd8d3}.ref-badge{display:none!important}}
+  </style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <div class="header-inner">
+      <div class="title-block"><div class="kicker">策略二｜先分類，再描述與命名</div><h1>《小女生》分類描述命名互動板</h1></div>
+      <div class="progress-wrap"><div class="progress-label"><span>分類進度</span><span id="progressText">0／16</span></div><div class="progress"><span id="progressBar"></span></div></div>
+      <div class="toolbar" aria-label="教師工具">
+        <button class="tool" id="applyNames">套用四類名稱</button>
+        <button class="tool" id="toggleReference" aria-pressed="false">顯示參考分類</button>
+        <button class="tool primary" id="checkBtn">檢查分類</button>
+        <button class="tool" id="printBtn">列印成果</button>
+        <button class="tool warn" id="resetBtn">重新開始</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="steps" aria-label="學習步驟">
+      <div class="step"><span class="step-num">1</span><div><b>抽取課文描述牌卡</b><small>讀懂每張卡正在描述什麼。</small></div></div>
+      <div class="step"><span class="step-num">2</span><div><b>自行分類、說明與命名</b><small>先找共同點，再替每類取名字。</small></div></div>
+      <div class="step"><span class="step-num">3</span><div><b>全班統整四類</b><small>外型、行為／特點、互動、情感。</small></div></div>
+    </section>
+
+    <section class="notice" aria-live="polite">
+      <p><b>操作方式：</b>可直接拖曳牌卡；也可先點選牌卡，再點分類區。分類名稱和理由由學生自行輸入。</p>
+      <div class="status" id="statusText">尚未開始分類</div>
+    </section>
+
+    <div class="workspace">
+      <aside class="panel bank" data-drop="bank" id="bankPanel" tabindex="0" aria-label="未分類牌卡區，點擊可把已選牌卡移回">
+        <div class="panel-head"><h2>未分類牌卡</h2><span class="count" id="bankCount">16</span></div>
+        <p class="bank-tip">牌卡取自《小女生》課文。先討論分類規則，不必急著猜老師心中的答案。</p>
+        <div class="card-list" id="bankCards"></div>
+      </aside>
+
+      <section class="zones" id="zones" aria-label="四個分類區">
+        <article class="zone" data-zone="appearance" data-drop="appearance">
+          <div class="zone-top"><span class="zone-letter">A</span><input class="zone-name" data-name="appearance" aria-label="A類名稱" placeholder="替 A 類命名"><span class="zone-count" data-count="appearance">0</span></div>
+          <div class="drop-zone" data-list="appearance" tabindex="0" role="button" aria-label="A分類區，點擊可放入已選牌卡"></div>
+          <label class="reason-label" for="reason-appearance">我們這樣分的理由</label><textarea class="reason" id="reason-appearance" data-reason="appearance" placeholder="因為這些語句都在描述……"></textarea>
+        </article>
+        <article class="zone" data-zone="action" data-drop="action">
+          <div class="zone-top"><span class="zone-letter">B</span><input class="zone-name" data-name="action" aria-label="B類名稱" placeholder="替 B 類命名"><span class="zone-count" data-count="action">0</span></div>
+          <div class="drop-zone" data-list="action" tabindex="0" role="button" aria-label="B分類區，點擊可放入已選牌卡"></div>
+          <label class="reason-label" for="reason-action">我們這樣分的理由</label><textarea class="reason" id="reason-action" data-reason="action" placeholder="因為這些語句都在描述……"></textarea>
+        </article>
+        <article class="zone" data-zone="interaction" data-drop="interaction">
+          <div class="zone-top"><span class="zone-letter">C</span><input class="zone-name" data-name="interaction" aria-label="C類名稱" placeholder="替 C 類命名"><span class="zone-count" data-count="interaction">0</span></div>
+          <div class="drop-zone" data-list="interaction" tabindex="0" role="button" aria-label="C分類區，點擊可放入已選牌卡"></div>
+          <label class="reason-label" for="reason-interaction">我們這樣分的理由</label><textarea class="reason" id="reason-interaction" data-reason="interaction" placeholder="因為這些語句都在描述……"></textarea>
+        </article>
+        <article class="zone" data-zone="emotion" data-drop="emotion">
+          <div class="zone-top"><span class="zone-letter">D</span><input class="zone-name" data-name="emotion" aria-label="D類名稱" placeholder="替 D 類命名"><span class="zone-count" data-count="emotion">0</span></div>
+          <div class="drop-zone" data-list="emotion" tabindex="0" role="button" aria-label="D分類區，點擊可放入已選牌卡"></div>
+          <label class="reason-label" for="reason-emotion">我們這樣分的理由</label><textarea class="reason" id="reason-emotion" data-reason="emotion" placeholder="因為這些語句都在描述……"></textarea>
+        </article>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div class="selected-banner" id="selectedBanner" role="status"><span>已選取：<b id="selectedText"></b>，請點一個分類區。</span><button id="cancelSelect">取消</button></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  const cards=[
+    {id:1,text:'緊緊跟在我身邊',answer:'action'},
+    {id:2,text:'喵喵叫',answer:'action'},
+    {id:3,text:'奮力睜開眼睛',answer:'action'},
+    {id:4,text:'慢慢走到我身旁',answer:'action'},
+    {id:5,text:'雪亮的大眼睛',answer:'appearance'},
+    {id:6,text:'毛茸茸的肚子',answer:'appearance'},
+    {id:7,text:'又圓又胖的肚子',answer:'appearance'},
+    {id:8,text:'四腳朝天的躺在沙發上',answer:'action'},
+    {id:9,text:'半睜著眼睛，輕搖著尾巴',answer:'action'},
+    {id:10,text:'一唱一和，高高低低',answer:'interaction'},
+    {id:11,text:'前腳放在我的大腿上',answer:'interaction'},
+    {id:12,text:'陪伴我和家人說話',answer:'interaction'},
+    {id:13,text:'我們講，牠也講',answer:'interaction'},
+    {id:14,text:'像個可愛的小孩',answer:'emotion'},
+    {id:15,text:'黏人的「膠水貓」',answer:'emotion'},
+    {id:16,text:'重要的家人',answer:'emotion'}
+  ];
+  const zoneOrder=['appearance','action','interaction','emotion'];
+  const officialNames={appearance:'外型',action:'行為／特點',interaction:'互動',emotion:'情感'};
+  const STORAGE_KEY='little-girl-classify-board-v1';
+  let state={assignments:{},names:{},reasons:{},showReference:false,checked:false};
+  let selectedId=null,drag=null,toastTimer=null;
+
+  function load(){try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));if(saved&&saved.assignments)state={...state,...saved}}catch(e){}}
+  function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
+  function toast(message){const el=document.getElementById('toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),1700)}
+  function cardById(id){return cards.find(c=>c.id===Number(id))}
+  function makeCard(card){
+    const button=document.createElement('button');button.type='button';button.className='desc-card';button.dataset.id=card.id;
+    if(selectedId===card.id)button.classList.add('selected');
+    const assigned=state.assignments[card.id];
+    if(state.checked&&assigned)button.classList.add(assigned===card.answer?'correct':'discuss');
+    button.innerHTML=`<span class="card-id">${card.id}</span>${card.text}<span class="ref-badge">參考：${officialNames[card.answer]}</span>`;
+    button.setAttribute('aria-label',`${card.text}，${assigned?'目前已分類':'目前未分類'}，點選後再點分類區`);
+    button.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectCard(card.id)}});
+    button.addEventListener('pointerdown',e=>startPointerDrag(e,button,card));
+    return button;
+  }
+  function render(){
+    document.body.classList.toggle('show-reference',state.showReference);
+    const bank=document.getElementById('bankCards');bank.replaceChildren();
+    cards.filter(c=>!state.assignments[c.id]).forEach(c=>bank.appendChild(makeCard(c)));
+    if(!bank.children.length)bank.innerHTML='<div class="drop-hint">全部牌卡都已分類</div>';
+    zoneOrder.forEach(zone=>{
+      const list=document.querySelector(`[data-list="${zone}"]`);list.replaceChildren();
+      const grouped=cards.filter(c=>state.assignments[c.id]===zone);
+      grouped.forEach(c=>list.appendChild(makeCard(c)));
+      if(!grouped.length)list.innerHTML='<div class="drop-hint">把牌卡放到這裡</div>';
+      document.querySelector(`[data-count="${zone}"]`).textContent=grouped.length;
+      const name=document.querySelector(`[data-name="${zone}"]`);if(document.activeElement!==name)name.value=state.names[zone]||'';
+      const reason=document.querySelector(`[data-reason="${zone}"]`);if(document.activeElement!==reason)reason.value=state.reasons[zone]||'';
+    });
+    const done=Object.keys(state.assignments).length,bankCount=cards.length-done;
+    document.getElementById('bankCount').textContent=bankCount;
+    document.getElementById('progressText').textContent=`${done}／${cards.length}`;
+    document.getElementById('progressBar').style.width=`${done/cards.length*100}%`;
+    document.getElementById('statusText').textContent=done===0?'尚未開始分類':done===cards.length?'已完成全部分類，可說明理由並統整名稱':`已分類 ${done} 張，還有 ${bankCount} 張`;
+    document.getElementById('toggleReference').textContent=state.showReference?'隱藏參考分類':'顯示參考分類';
+    document.getElementById('toggleReference').setAttribute('aria-pressed',String(state.showReference));
+    const banner=document.getElementById('selectedBanner');banner.classList.toggle('show',selectedId!==null);document.getElementById('selectedText').textContent=selectedId?cardById(selectedId).text:'';
+  }
+  function selectCard(id){selectedId=selectedId===id?null:id;render()}
+  function moveSelected(destination){if(selectedId===null)return false;if(destination==='bank')delete state.assignments[selectedId];else state.assignments[selectedId]=destination;const card=cardById(selectedId);selectedId=null;state.checked=false;save();render();toast(`${card.text} 已移動`);return true}
+  function startPointerDrag(event,element,card){
+    if(event.button!==0)return;event.preventDefault();
+    const startX=event.clientX,startY=event.clientY,pointerId=event.pointerId;
+    let moved=false,ghost=null;
+    element.setPointerCapture?.(pointerId);
+    const move=e=>{
+      const distance=Math.hypot(e.clientX-startX,e.clientY-startY);if(!moved&&distance<9)return;
+      if(!moved){moved=true;element.classList.add('dragging');ghost=element.cloneNode(true);ghost.classList.add('drag-ghost');ghost.classList.remove('dragging','selected','correct','discuss');document.body.appendChild(ghost)}
+      ghost.style.left=`${e.clientX+12}px`;ghost.style.top=`${e.clientY+12}px`;
+      document.querySelectorAll('[data-drop]').forEach(d=>d.classList.toggle('drop-active',!!document.elementFromPoint(e.clientX,e.clientY)?.closest(`[data-drop="${d.dataset.drop}"]`)));
+    };
+    const up=e=>{
+      element.removeEventListener('pointermove',move);element.removeEventListener('pointerup',up);element.removeEventListener('pointercancel',up);element.classList.remove('dragging');ghost?.remove();document.querySelectorAll('.drop-active').forEach(d=>d.classList.remove('drop-active'));
+      if(moved){const target=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-drop]');if(target){selectedId=card.id;moveSelected(target.dataset.drop)}else render()}
+      else selectCard(card.id);
+    };
+    element.addEventListener('pointermove',move);element.addEventListener('pointerup',up);element.addEventListener('pointercancel',up);
+  }
+  document.querySelectorAll('[data-drop]').forEach(target=>target.addEventListener('click',e=>{if(e.target.closest('.desc-card,input,textarea'))return;moveSelected(target.dataset.drop)}));
+  document.querySelectorAll('.zone-name').forEach(input=>input.addEventListener('input',e=>{state.names[e.target.dataset.name]=e.target.value;save()}));
+  document.querySelectorAll('.reason').forEach(input=>input.addEventListener('input',e=>{state.reasons[e.target.dataset.reason]=e.target.value;save()}));
+  document.getElementById('cancelSelect').addEventListener('click',()=>{selectedId=null;render()});
+  document.getElementById('applyNames').addEventListener('click',()=>{state.names={...officialNames};save();render();toast('已套用四類統整名稱')});
+  document.getElementById('toggleReference').addEventListener('click',()=>{state.showReference=!state.showReference;save();render()});
+  document.getElementById('checkBtn').addEventListener('click',()=>{const done=Object.keys(state.assignments).length;if(done<cards.length){toast(`還有 ${cards.length-done} 張牌卡尚未分類`);return}state.checked=true;state.showReference=true;save();render();const correct=cards.filter(c=>state.assignments[c.id]===c.answer).length;toast(`參考分類相同 ${correct}／${cards.length}；不同處請說明理由`)});
+  document.getElementById('printBtn').addEventListener('click',()=>window.print());
+  document.getElementById('resetBtn').addEventListener('click',()=>{if(!confirm('確定要清除全部分類、名稱與理由嗎？'))return;localStorage.removeItem(STORAGE_KEY);state={assignments:{},names:{},reasons:{},showReference:false,checked:false};selectedId=null;render();toast('已重新開始')});
+  load();render();
+</script>
+</body>
+</html>
